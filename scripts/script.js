@@ -19,7 +19,7 @@ $bodyInput.keyup( function() {
     sizeInput(this)
 });
 
-$saveButton.on('click', makeCard);
+$saveButton.on('click', instantiateNewObject);
 
 $cardsContainer.on('click', '.idea-card .card-delete-button', function() {
   deleteCard(this)
@@ -42,9 +42,8 @@ $cardsContainer.on('blur', '.idea-card .card-content', function() {
 });
 
 
-function addToStorage(key, title, body, quality) {
-  var newIdea = new IdeaObject(key, title, body, quality);
-  localStorage.setItem(key, JSON.stringify(newIdea))
+function addToStorage(object) {
+  localStorage.setItem(object.cardKey, JSON.stringify(object));
 }
 
 function deleteCard(card) {
@@ -56,49 +55,46 @@ function deleteCard(card) {
 function displayStorage() {
   for (i=0; i < localStorage.length; i++){
     var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    prependCards($thisCard.cardKey, $thisCard.title, $thisCard.body, $thisCard.quality)
+    prependObject($thisCard);
   }
 }
 
-function IdeaObject(cardKey, title, body, quality ){
+function IdeaObject(cardKey, title, body, quality) {
   this.cardKey = cardKey;
   this.title = title;
   this.body = body;
   this.quality = quality;
 }
 
-function makeCard(e) {
+function instantiateNewObject(e) {
   e.preventDefault();
+  var newObject = new IdeaObject(Date.now(), $titleInput.val(), $bodyInput.val(), 'swill') 
+  addToStorage(newObject);
+  prependObject(newObject);
+  resetInputs();
+  textValidation(newObject);
+  }
 
-  var cardKey = Date.now();
-  var titleVal = $titleInput.val();
-  var bodyVal = $bodyInput.val();
-  var ideaQuality = 'swill';
-
-  if (titleVal === "" || bodyVal === "") {
+function textValidation(object) {
+  if (object.title === "" || object.body === "") {
     $saveButton.text("please enter an idea");
     setTimeout(function(){ $saveButton.text("save"); }, 2500);
     return false;
   }
-
-  prependCards(cardKey, titleVal, bodyVal, ideaQuality);
-  addToStorage(cardKey, titleVal, bodyVal, ideaQuality);
-
-  resetInputs();
 }
 
-function prependCards(key, title, body, quality) {
+function prependObject(object) {
   $cardsContainer.prepend(
-    $(  `<article class="idea-card" id="${key}">
+    $(  `<article class="idea-card" id="${object.cardKey}">
       <header class="card-header-container">
-        <h3 class="card-header" contenteditable="true">${title}</h3>
+        <h3 class="card-header" contenteditable="true">${object.title}</h3>
         <button class="card-delete-button"></button>
       </header>
-      <p class="card-content" contenteditable="true">${body}</p>
+      <p class="card-content" contenteditable="true">${object.body}</p>
       <footer class="card-footer-container">
         <button class="upvote-button"></button>
         <button class="downvote-button"></button>
-        <h4 class="quality-header">quality: <span class="idea-quality">${quality}</span></h4>
+        <h4 class="quality-header">quality: <span class="idea-quality">${object.quality}</span></h4>
       </footer>
     </article> `
     )
