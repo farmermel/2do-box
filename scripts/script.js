@@ -1,43 +1,32 @@
-var $titleInput = $('#title-input');
-var $bodyInput = $('#body-input');
-var $saveButton = $('.button-save');
-
-var $searchInput = $('#search-input');
-var $cardsContainer = $('#cards-container')
-
-var $upvoteButton = $('.upvote-button');
-var $downvoteButton = $('.downvote-button');
-var $ideaQuality = $('.idea-quality');
-
 $(document).ready( function() {
   displayStorage();
 })
 
-$searchInput.keyup(searchCards)
+$('#search-input').keyup(searchCards)
 
-$bodyInput.keyup( function() {
+$('#body-input').keyup( function() {
     sizeInput(this)
 });
 
-$saveButton.on('click', instantiateNewObject);
+$('.button-save').on('click', instantiateNewObject);
 
-$cardsContainer.on('click', '.idea-card .card-delete-button', function() {
+$('#cards-container').on('click', '.idea-card .card-delete-button', function() {
   deleteCard(this)
 });
 
-$cardsContainer.on('click', '.idea-card .upvote-button', function() {
+$('#cards-container').on('click', '.idea-card .upvote-button', function() {
   setIdeaQuality(this, 'upvote') 
 });
 
-$cardsContainer.on('click', '.idea-card .downvote-button', function() {
+$('#cards-container').on('click', '.idea-card .downvote-button', function() {
   setIdeaQuality(this, 'downvote') 
 });
 
-$cardsContainer.on('blur', '.idea-card .card-header', function() {
+$('#cards-container').on('blur', '.idea-card .card-header', function() {
   saveCardTitle(this);
 });
 
-$cardsContainer.on('blur', '.idea-card .card-content', function() {
+$('#cards-container').on('blur', '.idea-card .card-content', function() {
   saveCardBody(this);
 });
 
@@ -68,23 +57,25 @@ function IdeaObject(cardKey, title, body, quality) {
 
 function instantiateNewObject(e) {
   e.preventDefault();
+  var $titleInput = $('#title-input');
+  var $bodyInput = $('#body-input');
   var newObject = new IdeaObject(Date.now(), $titleInput.val(), $bodyInput.val(), 'swill') 
   addToStorage(newObject);
   prependObject(newObject);
-  resetInputs();
+  resetInputs($titleInput, $bodyInput);
   textValidation(newObject);
   }
 
 function textValidation(object) {
   if (object.title === "" || object.body === "") {
-    $saveButton.text("please enter an idea");
-    setTimeout(function(){ $saveButton.text("save"); }, 2500);
+    $('.button-save').text("please enter an idea");
+    setTimeout(function(){ $('.button-save').text("save"); }, 2500);
     return false;
   }
 }
 
 function prependObject(object) {
-  $cardsContainer.prepend(
+  $('#cards-container').prepend(
     $(  `<article class="idea-card" id="${object.cardKey}">
       <header class="card-header-container">
         <h3 class="card-header" contenteditable="true">${object.title}</h3>
@@ -101,10 +92,10 @@ function prependObject(object) {
   );
 }
 
-function resetInputs() {
-  $titleInput.val("");
-  $bodyInput.val("");
-  $searchInput.val("");
+function resetInputs($title, $body) {
+  $title.val("");
+  $body.val("");
+  $('#search-input').val("");
 }
 
 function saveCardBody(card) {
@@ -130,7 +121,7 @@ function searchCards(e) {
 
   for (i=0; i < localStorage.length; i++){
     var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
-     if ($thisCard.title.includes($searchInput.val()) || $thisCard.body.includes($searchInput.val())) {
+     if ($thisCard.title.includes($('#search-input').val()) || $thisCard.body.includes($('#search-input').val())) {
       var keyId = "#" + $thisCard.cardKey
       $(keyId).removeClass('hidden');
     }
