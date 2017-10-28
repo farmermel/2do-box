@@ -47,20 +47,20 @@ function addToStorage(key, title, body, quality) {
   localStorage.setItem(key, JSON.stringify(newIdea))
 }
 
-function deleteCard (card) {
+function deleteCard(card) {
   thisKey = $(card).closest('.idea-card').attr('id');
   card.closest('.idea-card').remove();
   localStorage.removeItem(thisKey);
 }
 
-function displayStorage () {
+function displayStorage() {
   for (i=0; i < localStorage.length; i++){
     var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
     prependCards($thisCard.cardKey, $thisCard.title, $thisCard.body, $thisCard.quality)
   }
 }
 
-function IdeaObject (cardKey, title, body, quality ){
+function IdeaObject(cardKey, title, body, quality ){
   this.cardKey = cardKey;
   this.title = title;
   this.body = body;
@@ -105,13 +105,13 @@ function prependCards(key, title, body, quality) {
   );
 }
 
-function resetInputs () {
+function resetInputs() {
   $titleInput.val("");
   $bodyInput.val("");
   $searchInput.val("");
 }
 
-function saveCardBody (card) {
+function saveCardBody(card) {
   var bodyVal = $(card).text();
   var thisKey = $(card).closest('.idea-card').attr('id');
   var $thisIdea = JSON.parse(localStorage.getItem(thisKey));
@@ -120,7 +120,7 @@ function saveCardBody (card) {
   localStorage.setItem(thisKey, JSON.stringify($thisIdea));
 }
 
-function saveCardTitle (card) {
+function saveCardTitle(card) {
   var titleVal = $(card).text();
   var thisKey = $(card).closest('.idea-card').attr('id');
   var $thisIdea = JSON.parse(localStorage.getItem(thisKey));
@@ -141,7 +141,7 @@ function searchCards(e) {
   }
 }
 
-function setIdeaQuality (card, vote) {
+function setIdeaQuality(card, vote) {
   var thisKey = $(card).closest('.idea-card').attr('id');
   var $thisIdea = JSON.parse(localStorage.getItem(thisKey))
 
