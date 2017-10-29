@@ -18,12 +18,14 @@ $('#cards-container').on('click', '.idea-card .downvote-button', function() {
   setQuality(this, 'downvote') 
 });
 
-$('#cards-container').on('blur', '.idea-card .card-header', function() {
-  saveEdits(this, 'title');
+$('#cards-container').on('blur keydown', '.idea-card .card-header', function(e) {
+  // saveEdits(e, this, 'title');
+  enterKeyPress(e, this, 'title')
+  console.log(e)
 });
 
-$('#cards-container').on('blur', '.idea-card .card-content', function() {
-  saveEdits(this, 'body');
+$('#cards-container').on('blur keydown', '.idea-card .card-content', function(e) {
+  enterKeyPress(e, this, 'body');
 });
 
 
@@ -92,6 +94,16 @@ function resetInputs($title, $body) {
   $body.val("");
   $('#search-input').val("");
 };
+
+function enterKeyPress(e, card, target) {
+  if (e.which === 13 && !$(e.target).is('textarea')) {
+      e.preventDefault();
+    }
+  if (e.which === 13 || e.which === 'focusout') {
+    saveEdits(card, target);
+    console.log(e.which)
+  }
+}
 
 function saveEdits(card, target) {
   var text = $(card).text();
