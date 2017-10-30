@@ -1,14 +1,18 @@
+//modify display storage: if the event is page load only load 
+//uncompleted tasks. If the event is clicking the show completed
+//button, load all the tasks. Have this be a parameter you pass in
+//also should have completed tasks show up grayed out
+
+
 $(document).ready(displayStorage());
 
 $('#search-input').keyup(searchCards);
 
-$('#body-input').keyup(sizeInput(this));
+// $('#body-input').keyup(sizeInput(this));
 
 $('.button-save').on('click', instantiateNewObject);
 
-$('#cards-container').on('click', '.idea-card .card-delete-button', function() {
-  deleteCard(this)
-});
+$('#cards-container').on('click', '.idea-card .card-delete-button', deleteCard);
 
 $('#cards-container').on('click', '.idea-card .upvote-button', function() {
   setQuality(this, 'upvote') 
@@ -30,13 +34,23 @@ $('#cards-container').on('click', '.idea-card .complete-btn', function() {
   completionValue(this);
 });
 
+$('.show-completed').on('click', function() {
+  // hideCard()
+  showCompleted();
+});
+
 function addToStorage(object) {
   localStorage.setItem(object.cardKey, JSON.stringify(object));
 };
 
-function deleteCard(card) {
+function hideCard(card) {
   thisKey = $(card).closest('.idea-card').attr('id');
   card.closest('.idea-card').remove();
+}
+
+function deleteCard() {
+  thisKey = $(this).closest('.idea-card').attr('id');
+  this.closest('.idea-card').remove();
   localStorage.removeItem(thisKey);
 };
 
@@ -45,11 +59,22 @@ function displayStorage() {
     var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
     if ($thisCard.completed === false) {
         prependObject($thisCard);
-
+        // localStorage.setItem(localStorage.key(i), JSON.stringify($thisCard.completed))
+        // showCompleted($thisCard, boolean);
       // hideCard($thisCard.cardKey);
+    } 
       // toggleCompletionClass($thisCard.cardKey)
-    };
   };
+};
+
+function showCompleted() {
+  for (i=0; i < localStorage.length; i++){
+    var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
+    if ($thisCard.completed === true) {
+      prependObject($thisCard);
+    }
+  }
+    // $thisCard.shown = boolean === false;
 };
 
 function IdeaObject(cardKey, title, body, quality) {
@@ -57,15 +82,16 @@ function IdeaObject(cardKey, title, body, quality) {
   this.title = title;
   this.body = body;
   this.quality = quality;
-  this.voteCounter = 0;
+  this.voteCounter = 2;
   this.completed = false;
+  this.shown = false;
 };
 
 function instantiateNewObject(e) {
   e.preventDefault();
   var $titleInput = $('#title-input');
   var $bodyInput = $('#body-input');
-  var newObject = new IdeaObject(Date.now(), $titleInput.val(), $bodyInput.val(), 'swill') 
+  var newObject = new IdeaObject(Date.now(), $titleInput.val(), $bodyInput.val(), 'normal') 
   addToStorage(newObject);
   prependObject(newObject);
   resetInputs($titleInput, $bodyInput);
@@ -85,7 +111,7 @@ function prependObject(object) {
     $(`<article class="idea-card" id="${object.cardKey}">
         <header class="card-header-container">
           <h3 class="card-header" contenteditable="true">${object.title}</h3>
-          <button class="complete-btn">Completed Task</button>
+          <button class="complete-btn">Completed</button>
           <button class="card-delete-button"></button>
         </header>
         <p class="card-content" contenteditable="true">${object.body}</p>
@@ -110,8 +136,8 @@ function enterKeyPress(e, card, target) {
   if (e.which === 13 || e.which === 'focusout') {
     saveEdits(card, target);
     console.log(e.which)
-  }
-}
+  };
+};
 
 function saveEdits(card, target) {
   var text = $(card).text();
@@ -137,7 +163,7 @@ function setQuality(card, vote) {
   var thisKey = $(card).closest('.idea-card').attr('id');
   var $thisObject = JSON.parse(localStorage.getItem(thisKey));
 
-  if ( vote === 'upvote' && $thisObject.voteCounter < 2) {
+  if ( vote === 'upvote' && $thisObject.voteCounter < 4) {
     $thisObject.voteCounter++;
   } else if (vote === 'downvote' && $thisObject.voteCounter > 0) {
     $thisObject.voteCounter--;
@@ -147,7 +173,7 @@ function setQuality(card, vote) {
 };
 
 function saveQuality($thisObject, thisKey) {
-  var ratingArray = ['swill', 'plausible', 'genius'];
+  var ratingArray = ['none', 'low', 'normal', 'high', 'critical'];
   $thisObject.quality = ratingArray[$thisObject.voteCounter];
   $(`#${thisKey} .idea-quality`).text($thisObject.quality);
   localStorage.setItem(thisKey, JSON.stringify($thisObject));
@@ -181,7 +207,7 @@ function toggleCompletionClass(articleID) {
 //   // $(`#${articleID}`).toggleClass('hidden');
 // }
 
-function sizeInput(element) {
- $(element).height(0).height(element.scrollHeight)
-};
+// function sizeInput(element) {
+//  $(element).height(0).height(element.scrollHeight)
+// };
 

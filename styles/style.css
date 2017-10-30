@@ -120,6 +120,18 @@ button  {
 
 /* search bar */
 
+.show-completed {
+	margin: 0px 0px 15px;
+	background-color: #7A1667;
+	border-radius: 0;
+  border: 0;
+	color: #FFFFFF;
+  font-size: 14px;
+  height: 44px;
+  outline-style: none;
+  width: 47%;
+} 
+
 .search-form {
 	background-color: #FFFFFF;
 	margin: 0px auto;
@@ -186,13 +198,13 @@ button  {
   position: absolute;
   top: 18px;
   right: 30px;
-  background-color: #7A1667;
+  background-color: #D1D3D4;
   border-style: none;
   color: #fff;
 }
 
 .complete-btn:hover {
-	background-color: #3D0B34;
+	background-color: #39B54A;
 }
 
 .card-delete-button {
