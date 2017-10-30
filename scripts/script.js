@@ -19,15 +19,16 @@ $('#cards-container').on('click', '.idea-card .downvote-button', function() {
 });
 
 $('#cards-container').on('blur keydown', '.idea-card .card-header', function(e) {
-  // saveEdits(e, this, 'title');
   enterKeyPress(e, this, 'title')
-  console.log(e)
 });
 
 $('#cards-container').on('blur keydown', '.idea-card .card-content', function(e) {
   enterKeyPress(e, this, 'body');
 });
 
+$('#cards-container').on('click', '.idea-card .complete-btn', function() {
+  completionValue(this);
+});
 
 function addToStorage(object) {
   localStorage.setItem(object.cardKey, JSON.stringify(object));
@@ -42,7 +43,12 @@ function deleteCard(card) {
 function displayStorage() {
   for (i=0; i < localStorage.length; i++){
     var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    prependObject($thisCard);
+    if ($thisCard.completed === false) {
+        prependObject($thisCard);
+
+      // hideCard($thisCard.cardKey);
+      // toggleCompletionClass($thisCard.cardKey)
+    };
   };
 };
 
@@ -52,6 +58,7 @@ function IdeaObject(cardKey, title, body, quality) {
   this.body = body;
   this.quality = quality;
   this.voteCounter = 0;
+  this.completed = false;
 };
 
 function instantiateNewObject(e) {
@@ -78,6 +85,7 @@ function prependObject(object) {
     $(`<article class="idea-card" id="${object.cardKey}">
         <header class="card-header-container">
           <h3 class="card-header" contenteditable="true">${object.title}</h3>
+          <button class="complete-btn">Completed Task</button>
           <button class="card-delete-button"></button>
         </header>
         <p class="card-content" contenteditable="true">${object.body}</p>
@@ -144,6 +152,34 @@ function saveQuality($thisObject, thisKey) {
   $(`#${thisKey} .idea-quality`).text($thisObject.quality);
   localStorage.setItem(thisKey, JSON.stringify($thisObject));
 };
+
+function completionValue(completeBtn) {
+  var thisID = $(completeBtn).closest('article').attr('id');
+  var thisObject = JSON.parse(localStorage.getItem(thisID));
+  if (thisObject.completed === false) {
+    thisObject.completed = true;
+  } else {
+    thisObject.completed = false;
+  }
+  localStorage.setItem(thisID, JSON.stringify(thisObject));
+  toggleCompletionClass(thisID)
+};
+
+function toggleCompletionClass(articleID) {
+  $(`#${articleID}`).toggleClass('grayout-card');
+  $(`#${articleID}`).find('.complete-btn').toggleClass('grayout-btn');
+};
+
+// function hideCard(articleID) {
+//   var attr = $(`#${articleID}`).attr('hidden');
+//   if (typeof attr !== typeof undefined && attr !== false) {
+//     $(`#${articleID}`).attr('hidden')
+//   } else {
+//     $(`#${articleID}`).removeAttr('hidden')
+//   }
+//   // if ($(`#${articleID}`).hasAttr('hidden'))
+//   // $(`#${articleID}`).toggleClass('hidden');
+// }
 
 function sizeInput(element) {
  $(element).height(0).height(element.scrollHeight)

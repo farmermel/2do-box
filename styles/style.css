@@ -145,6 +145,15 @@ button  {
 
 /* haus du cards */
 
+.grayout-card {
+  background-color: #d3d3d3;
+  opacity: 0.7;
+}
+
+.grayout-btn {
+	opacity: 0.2;
+}
+
 .cards-container {
   height: 70vh;
 	overflow-y: scroll;
@@ -169,8 +178,21 @@ button  {
 	font-size: 16px;
 	letter-spacing: .2px;
 	margin-right: 30px;
-	padding: 10px 0px 0px 3px;
+	padding: 25px 0px 0px 3px;
 	outline-style: none;
+}
+
+.complete-btn {
+  position: absolute;
+  top: 18px;
+  right: 30px;
+  background-color: #7A1667;
+  border-style: none;
+  color: #fff;
+}
+
+.complete-btn:hover {
+	background-color: #3D0B34;
 }
 
 .card-delete-button {
