@@ -60,6 +60,32 @@ button  {
 	color: #7A1667;
 }
 
+.importance {
+	width: 16%;
+  margin: 0 1% 0;
+  border: 0;
+  font-size: 11px;
+  background-color: #7A1667;
+  color: #FFF;
+  outline-style: none;
+}
+
+#none {
+	background-color: #CC86BF;
+}
+
+#low {
+	background-color: #9E3F8C;
+}
+
+#high {
+	background-color: #560F49;
+}
+
+#critical {
+	background-color: #35092D;
+}
+
 .input-form {
 	width: 50%;
 	max-width: 510px;
@@ -120,7 +146,8 @@ button  {
 
 /* search bar */
 
-.show-completed {
+.show-completed,
+.display-more {
 	margin: 0px 0px 15px;
 	background-color: #7A1667;
 	border-radius: 0;
@@ -129,7 +156,7 @@ button  {
   font-size: 14px;
   height: 44px;
   outline-style: none;
-  width: 47%;
+  width: 100%;
 } 
 
 .search-form {
@@ -204,6 +231,10 @@ button  {
 }
 
 .complete-btn:hover {
+	background-color: #39B54A;
+}
+
+.completed-task {
 	background-color: #39B54A;
 }
 
