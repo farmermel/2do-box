@@ -81,8 +81,10 @@ function showCompleted() {
     var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
     if ($thisCard.completed === true) {
       prependObject($thisCard);
+      toggleCompletionClass($thisCard.cardKey)
     }
   }
+  $('.show-completed').slideToggle(800);
     // $thisCard.shown = boolean === false;
 };
 
@@ -95,27 +97,15 @@ function displayTen() {
     for (i=storageLength - 10; i < storageLength; i++) {
       var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
       prependObject($thisCard); 
-    }
+    };
   };
 };
 
 function displayMore() {
   $('.cards-container').html('');
   displayStorage();
-}
-
-// function displayMore() {
-//   if (localStorage.length < 10) {
-//     return
-//   } else {
-//     var length = localStorage.length -10;
-//   }
-//   for (i=10; i < length; i++) {
-//     var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
-//     prependObject($thisCard);
-//   };
-
-// }
+  $('.display-more').slideToggle(800);
+};
 
 function IdeaObject(cardKey, title, body, quality) {
   this.cardKey = cardKey;
@@ -202,15 +192,13 @@ function searchCards(e) {
 function setQuality(upvote) {
   var thisKey = $(this).closest('.idea-card').attr('id');
   var $thisObject = JSON.parse(localStorage.getItem(thisKey));
-console.log(this)
-console.log(upvote)
   if (this === upvote && $thisObject.voteCounter < 4) {
     $thisObject.voteCounter++;
-  // } else if (vote === 'downvote' && $thisObject.voteCounter > 0) {
-  //   $thisObject.voteCounter--;
+  } else if (vote === 'downvote' && $thisObject.voteCounter > 0) {
+    $thisObject.voteCounter--;
   };
   
-  // saveQuality($thisObject, thisKey);
+  saveQuality($thisObject, thisKey);
 };
 
 function saveQuality($thisObject, thisKey) {
@@ -233,8 +221,9 @@ function completionValue(completeBtn) {
 };
 
 function toggleCompletionClass(articleID) {
-  $(`#${articleID}`).toggleClass('grayout-card');
-  $(`#${articleID}`).find('.complete-btn').toggleClass('grayout-btn');
+  // $(`#${articleID}`).toggleClass('grayout-card');
+  $(`#${articleID}`).find('.complete-btn').toggleClass('completed-task');
+  // $(`#${articleID}`).find('.complete-btn').toggleClass('grayout-btn');
 };
 
 // function levelImportance() {
