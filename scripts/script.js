@@ -43,10 +43,9 @@ $('#cards-container').on('click', '.idea-card .complete-btn', function() {
   completionValue(this);
 });
 
-$('.show-completed').on('click', function() {
-  // hideCard()
-  showCompleted();
-});
+$('.show-completed').on('click', showCompleted);
+
+$('.show-completed').on('click', toggleCompletedAppearance);
 
 function addToStorage(object) {
   localStorage.setItem(object.cardKey, JSON.stringify(object));
@@ -84,8 +83,11 @@ function showCompleted() {
       toggleCompletionClass($thisCard.cardKey)
     }
   }
-  $('.show-completed').slideToggle(800);
     // $thisCard.shown = boolean === false;
+};
+
+function toggleCompletedAppearance() {
+  $('.show-completed').slideToggle(800);
 };
 
 function displayTen() {
@@ -104,6 +106,9 @@ function displayTen() {
 function displayMore() {
   $('.cards-container').html('');
   displayStorage();
+  //If we don't call showCompleted the buttons reveal things in a really strange way
+  //but if we do it toggles the class weird
+  showCompleted();
   $('.display-more').slideToggle(800);
 };
 
