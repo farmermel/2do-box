@@ -1,23 +1,8 @@
-
-
-
 $(document).ready(displayTen);
 
 $('.search-form').on('click', '.importance' , function(e) {
   filterImportance(this, e);
-})
-
-// $('#body-input').keyup(sizeInput(this));
-
-// $('#none').on('click', levelImportance);
-
-// $('#low').on('click', levelImportance);
-
-// $('#normal').on('click', levelImportance);
-
-// $('#high').on('click', levelImportance);
-
-// $('#critical').on('click', levelImportance);
+});
 
 $('.display-more').on('click', displayMore);
 
@@ -26,92 +11,26 @@ $('.button-save').on('click', instantiateNewObject);
 $('#cards-container').on('click', '.idea-card .card-delete-button', deleteCard);
 
 $('#cards-container').on('click', '.idea-card .upvote-button', function() {
-  setQuality(this, 'upvote') 
+  setQuality(this, 'upvote');
 });
 
 $('#cards-container').on('click', '.idea-card .downvote-button', function() {
-  setQuality(this, 'downvote') 
+  setQuality(this, 'downvote'); 
 });
 
 $('#cards-container').on('blur keydown', '.idea-card .card-header', function(e) {
-  enterKeyPress(e, this, 'title')
+  enterKeyPress(e, this, 'title');
 });
 
 $('#cards-container').on('blur keydown', '.idea-card .card-content', function(e) {
   enterKeyPress(e, this, 'body');
 });
 
-$('#cards-container').on('click', '.idea-card .complete-btn', function() {
-  completionValue(this);
-});
+$('#cards-container').on('click', '.idea-card .complete-btn', completionValue);
 
 $('.show-completed').on('click', showCompleted);
 
 $('.show-completed').on('click', toggleCompletedAppearance);
-
-function addToStorage(object) {
-  localStorage.setItem(object.cardKey, JSON.stringify(object));
-};
-
-function hideCard(card) {
-  thisKey = $(card).closest('.idea-card').attr('id');
-  card.closest('.idea-card').remove();
-}
-
-function deleteCard() {
-  thisKey = $(this).closest('.idea-card').attr('id');
-  this.closest('.idea-card').remove();
-  localStorage.removeItem(thisKey);
-};
-
-function displayStorage() {
-  for (i=0; i < localStorage.length; i++){
-    var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    if ($thisCard.completed === false) {
-        prependObject($thisCard);
-        // localStorage.setItem(localStorage.key(i), JSON.stringify($thisCard.completed))
-        // showCompleted($thisCard, boolean);
-      // hideCard($thisCard.cardKey);
-    } 
-      // toggleCompletionClass($thisCard.cardKey)
-  };
-};
-
-function showCompleted() {
-  for (i=0; i < localStorage.length; i++){
-    var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    if ($thisCard.completed === true) {
-      prependObject($thisCard);
-      toggleCompletionClass($thisCard.cardKey)
-    }
-  }
-    // $thisCard.shown = boolean === false;
-};
-
-function toggleCompletedAppearance() {
-  $('.show-completed').slideToggle(800);
-  displayStorage();
-};
-
-function displayTen() {
-  if (localStorage.length <= 10) {
-    displayStorage();
-  } 
-  else {
-    var storageLength = localStorage.length;
-    for (i=storageLength - 10; i < storageLength; i++) {
-      var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
-      prependObject($thisCard); 
-    };
-  };
-};
-
-function displayMore() {
-  $('.cards-container').html('');
-  displayStorage();
-  showCompleted();
-  $('.display-more').slideToggle(800);
-};
 
 function IdeaObject(cardKey, title, body, quality) {
   this.cardKey = cardKey;
@@ -127,19 +46,15 @@ function instantiateNewObject(e) {
   e.preventDefault();
   var $titleInput = $('#title-input');
   var $bodyInput = $('#body-input');
-  var newObject = new IdeaObject(Date.now(), $titleInput.val(), $bodyInput.val(), 'normal') 
+  var newObject = new IdeaObject(Date.now(), $titleInput.val(), $bodyInput.val(), 'normal'); 
   addToStorage(newObject);
   prependObject(newObject);
   resetInputs($titleInput, $bodyInput);
   textValidation(newObject);
 };
 
-function textValidation(object) {
-  if (object.title === "" || object.body === "") {
-    $('.button-save').text("please enter an idea");
-    setTimeout(function(){ $('.button-save').text("save"); }, 2500);
-    return false;
-  };
+function addToStorage(object) {
+  localStorage.setItem(object.cardKey, JSON.stringify(object));
 };
 
 function prependObject(object) {
@@ -165,13 +80,74 @@ function resetInputs($title, $body) {
   $('#search-input').val("");
 };
 
+function textValidation(object) {
+  if (object.title === "" || object.body === "") {
+    $('.button-save').text("please enter an idea");
+    setTimeout(function(){ $('.button-save').text("save"); }, 2500);
+    return false;
+  };
+};
+
+function hideCard(card) {
+  thisKey = $(card).closest('.idea-card').attr('id');
+  card.closest('.idea-card').remove();
+};
+
+function deleteCard() {
+  thisKey = $(this).closest('.idea-card').attr('id');
+  this.closest('.idea-card').remove();
+  localStorage.removeItem(thisKey);
+};
+
+function displayStorage() {
+  for (i=0; i < localStorage.length; i++) {
+    var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
+    if ($thisCard.completed === false) {
+        prependObject($thisCard);
+    };   
+  };
+};
+
+function showCompleted() {
+  for (i=0; i < localStorage.length; i++) {
+    var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
+    if ($thisCard.completed === true) {
+      prependObject($thisCard);
+      toggleCompletionClass($thisCard.cardKey);
+    };
+  };
+};
+
+function toggleCompletedAppearance() {
+  $('.show-completed').slideToggle(800);
+  displayStorage();
+};
+
+function displayTen() {
+  if (localStorage.length <= 10) {
+    displayStorage();
+  } else {
+    var storageLength = localStorage.length;
+    for (i=storageLength - 10; i < storageLength; i++) {
+      var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
+      prependObject($thisCard); 
+    };
+  };
+};
+
+function displayMore() {
+  $('.cards-container').html('');
+  displayStorage();
+  showCompleted();
+  $('.display-more').slideToggle(800);
+};
+
 function enterKeyPress(e, card, target) {
   if (e.which === 13 && !$(e.target).is('textarea')) {
       e.preventDefault();
-    }
+    };
   if (e.which === 13 || e.which === 'focusout') {
     saveEdits(card, target);
-    console.log(e.which)
   };
 };
 
@@ -184,12 +160,11 @@ function saveEdits(card, target) {
 };
 
 function searchCards(e) {
-  $('.idea-card').addClass('hidden')
-
+  $('.idea-card').addClass('hidden');
   for (i=0; i < localStorage.length; i++){
     var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
      if ($thisCard.title.includes($('#search-input').val()) || $thisCard.body.includes($('#search-input').val())) {
-      var keyId = "#" + $thisCard.cardKey
+      var keyId = "#" + $thisCard.cardKey;
       $(keyId).removeClass('hidden');
     };
   };
@@ -203,7 +178,6 @@ function setQuality(card, vote) {
   } else if (vote === 'downvote' && $thisObject.voteCounter > 0) {
     $thisObject.voteCounter--;
   };
-  
   saveQuality($thisObject, thisKey);
 };
 
@@ -214,14 +188,14 @@ function saveQuality($thisObject, thisKey) {
   localStorage.setItem(thisKey, JSON.stringify($thisObject));
 };
 
-function completionValue(completeBtn) {
-  var thisID = $(completeBtn).closest('article').attr('id');
+function completionValue() {
+  var thisID = $(this).closest('article').attr('id');
   var thisObject = JSON.parse(localStorage.getItem(thisID));
   if (thisObject.completed === false) {
     thisObject.completed = true;
   } else {
     thisObject.completed = false;
-  }
+  };
   localStorage.setItem(thisID, JSON.stringify(thisObject));
   toggleCompletionClass(thisID);
 };
@@ -230,7 +204,6 @@ function toggleCompletionClass(articleID) {
   $(`#${articleID}`).toggleClass('grayout-card');
   $(`#${articleID}`).find('.complete-btn').toggleClass('completed-task');
 };
-
 
 function filterImportance(button, e) {
   $('.cards-container').html('');
@@ -241,23 +214,3 @@ function filterImportance(button, e) {
     };
   };
 };
-
-
-
-
-
-
-
-// function hideCard(articleID) {
-//   var attr = $(`#${articleID}`).attr('hidden');
-//   if (typeof attr !== typeof undefined && attr !== false) {
-//     $(`#${articleID}`).attr('hidden')
-//   } else {
-//     $(`#${articleID}`).removeAttr('hidden')
-//   }
-//   // if ($(`#${articleID}`).hasAttr('hidden'))
-//   // $(`#${articleID}`).toggleClass('hidden');
-// }
-
-
-
