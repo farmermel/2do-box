@@ -3,7 +3,9 @@
 
 $(document).ready(displayTen);
 
-$('#search-input').keyup(searchCards);
+$('.search-form').on('click', '.importance' , function(e) {
+  filterImportance(this, e);
+})
 
 // $('#body-input').keyup(sizeInput(this));
 
@@ -88,6 +90,7 @@ function showCompleted() {
 
 function toggleCompletedAppearance() {
   $('.show-completed').slideToggle(800);
+  displayStorage();
 };
 
 function displayTen() {
@@ -106,8 +109,6 @@ function displayTen() {
 function displayMore() {
   $('.cards-container').html('');
   displayStorage();
-  //If we don't call showCompleted the buttons reveal things in a really strange way
-  //but if we do it toggles the class weird
   showCompleted();
   $('.display-more').slideToggle(800);
 };
@@ -222,18 +223,26 @@ function completionValue(completeBtn) {
     thisObject.completed = false;
   }
   localStorage.setItem(thisID, JSON.stringify(thisObject));
-  toggleCompletionClass(thisID)
+  toggleCompletionClass(thisID);
 };
 
 function toggleCompletionClass(articleID) {
-  // $(`#${articleID}`).toggleClass('grayout-card');
+  $(`#${articleID}`).toggleClass('grayout-card');
   $(`#${articleID}`).find('.complete-btn').toggleClass('completed-task');
-  // $(`#${articleID}`).find('.complete-btn').toggleClass('grayout-btn');
 };
 
-// function levelImportance() {
 
-// }
+function filterImportance(button, e) {
+  $('.cards-container').html('');
+  for (i = 0; i < localStorage.length; i++) {
+    var $thisCard = JSON.parse(localStorage.getItem(localStorage.key(i)));
+      if ($thisCard.quality === $(button).attr('id')) {
+      prependObject($thisCard);
+    };
+  };
+};
+
+
 
 
 
@@ -250,7 +259,5 @@ function toggleCompletionClass(articleID) {
 //   // $(`#${articleID}`).toggleClass('hidden');
 // }
 
-// function sizeInput(element) {
-//  $(element).height(0).height(element.scrollHeight)
-// };
+
 
