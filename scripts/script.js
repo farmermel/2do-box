@@ -17,7 +17,7 @@ $('#search-input').keyup(searchCards);
 
 // $('#critical').on('click', levelImportance);
 
-// $('.display-more').on('click', displayMore);
+$('.display-more').on('click', displayMore);
 
 $('.button-save').on('click', instantiateNewObject);
 
@@ -98,6 +98,11 @@ function displayTen() {
     }
   };
 };
+
+function displayMore() {
+  $('.cards-container').html('');
+  displayStorage();
+}
 
 // function displayMore() {
 //   if (localStorage.length < 10) {
