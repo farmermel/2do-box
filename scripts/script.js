@@ -23,9 +23,9 @@ $('.button-save').on('click', instantiateNewObject);
 
 $('#cards-container').on('click', '.idea-card .card-delete-button', deleteCard);
 
-$('#cards-container').on('click', '.idea-card .upvote-button', setQuality.bind(this ,'upvote'));
-//   setQuality(this, 'upvote') 
-// });
+$('#cards-container').on('click', '.idea-card .upvote-button', function() {
+  setQuality(this, 'upvote') 
+});
 
 $('#cards-container').on('click', '.idea-card .downvote-button', function() {
   setQuality(this, 'downvote') 
@@ -194,10 +194,10 @@ function searchCards(e) {
   };
 };
 
-function setQuality(upvote) {
-  var thisKey = $(this).closest('.idea-card').attr('id');
+function setQuality(card, vote) {
+  var thisKey = $(card).closest('.idea-card').attr('id');
   var $thisObject = JSON.parse(localStorage.getItem(thisKey));
-  if (this === upvote && $thisObject.voteCounter < 4) {
+  if (vote === 'upvote' && $thisObject.voteCounter < 4) {
     $thisObject.voteCounter++;
   } else if (vote === 'downvote' && $thisObject.voteCounter > 0) {
     $thisObject.voteCounter--;
